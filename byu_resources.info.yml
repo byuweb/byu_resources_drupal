@@ -1,0 +1,5 @@
+name: BYU Resources
+type: module
+package: BYU
+description: 'Pulls information about web components and Drupal modules developed by BYU.'
+core: 8.x

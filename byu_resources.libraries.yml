@@ -1,0 +1,6 @@
+default:
+  js:
+    ./dist/components.js: {}
+    https://cdn.byu.edu/byu-feature-card/latest/byu-feature-card.min.js: { type: external, minified: true }
+  dependencies:
+    - core/jquery
