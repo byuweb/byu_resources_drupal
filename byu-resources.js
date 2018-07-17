@@ -17,7 +17,7 @@ class ByuResources extends LitElement {
         }
       })
     });
-    $.getJSON('https://www.drupal.org/brigham-young-university', function(data) {console.log(data)});
+    // $.getJSON('https://www.drupal.org/brigham-young-university', function(data) {console.log(data)});
   }
 }
 

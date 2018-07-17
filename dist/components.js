@@ -1136,7 +1136,7 @@ class ByuResources extends __WEBPACK_IMPORTED_MODULE_0__polymer_lit_element__["a
         }
       })
     });
-    $.getJSON('https://www.drupal.org/brigham-young-university', function(data) {console.log(data)});
+    // $.getJSON('https://www.drupal.org/brigham-young-university', function(data) {console.log(data)});
   }
 }
 

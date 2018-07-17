@@ -1415,9 +1415,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                         }
                     });
                 });
-                $.getJSON('https://www.drupal.org/brigham-young-university', function (data) {
-                    console.log(data);
-                });
+                // $.getJSON('https://www.drupal.org/brigham-young-university', function(data) {console.log(data)});
             }
         }]);
 
