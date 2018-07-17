@@ -1128,14 +1128,17 @@ class ByuResources extends __WEBPACK_IMPORTED_MODULE_0__polymer_lit_element__["a
 
   connectedCallback() {
     super.connectedCallback();
-    $.getJSON('https://cdn.byu.edu/manifest.json', function(data) {
-      $.each(data.libraries, function(name, library) {
-        if (library.type == 'web-component') {
-          console.log(library.name);
-          console.log(library.description);
-        }
-      })
-    });
+    (function($) {
+      $.getJSON('https://cdn.byu.edu/manifest.json', function(data) {
+        $.each(data.libraries, function(name, library) {
+          if (library.type == 'web-component') {
+            console.log(library.name);
+            console.log(library.description);
+          }
+        })
+      });
+    })(jQuery);
+
     // $.getJSON('https://www.drupal.org/brigham-young-university', function(data) {console.log(data)});
   }
 }

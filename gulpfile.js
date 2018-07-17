@@ -13,9 +13,6 @@ initWcBuild(gulp, {
   js: {
     input: './byu-resources.js',
     polyfillUrl: 'https://cdn.byu.edu/web-component-polyfills/latest/web-component-polyfills.min.js'
-  },
-  css: {
-
   }
 });
 
@@ -28,7 +25,6 @@ gulp.task('watch', ['build'], function (done) {
     notify: false
   }, done);
 
-  gulp.watch(['./byu-resources/**'], ['build']);
 });
 
 gulp.task('default', ['watch']);

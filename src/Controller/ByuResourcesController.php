@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: will
- * Date: 7/17/18
- * Time: 3:32 PM
- */
 
 namespace Drupal\byu_resources\Controller;
 
@@ -17,10 +11,18 @@ use Drupal\Core\Controller\ControllerBase;
  */
 
 class ByuResourcesController extends ControllerBase {
+
+  /**
+   * Function that builds all the content that is found in the BYU resources page.
+   * @return array - Content of the page.
+   */
+
   public function content() {
+    $html = '<byu-resources></byu-resources>';
+
     return [
       '#type' => 'markup',
-      '#markup' => $this->t('Hello World!')
+      '#markup' => $this->t($html)
     ];
   }
 }
