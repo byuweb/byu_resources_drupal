@@ -905,8 +905,8 @@ function matchesSelector(el, selector) {
 /* unused harmony export styleString */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__polymer_polymer_lib_mixins_properties_mixin_js__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__polymer_polymer_lib_utils_case_map_js__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lit_html_lib_shady_render_js__ = __webpack_require__(18);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_lit_html_lib_lit_extended_js__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_lit_html_lib_shady_render_js__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_lit_html_lib_lit_extended_js__ = __webpack_require__(18);
 /* unused harmony reexport html */
 /* unused harmony reexport svg */
 
@@ -1181,9 +1181,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "<div id=\"resources\"></div>";
+module.exports = "<style>" + __webpack_require__(15) + "</style> <div id=\"resources\"></div>";
 
 /***/ }),
 /* 7 */
@@ -1217,7 +1217,14 @@ class ByuResources extends __WEBPACK_IMPORTED_MODULE_0__polymer_lit_element__["a
         let html = '';
         jQuery.each(data.libraries, function(name, library) {
           if (library.type == 'web-component') {
-            html += '<byu-feature-card class="gray-title"><div slot="title">' + library.name + '</div><div slot="feature-left"><img src="./modules/custom/byu_resources/logos/html5-200px.png"></div><div slot="feature-center">' + library.description + '</div></byu-feature-card>';
+            html += '<byu-feature-card class="gray-title">' +
+              '<div slot="title">' + library.name + '</div>' +
+              '<div slot="feature-left"><img class="resource-icon" src="./modules/custom/byu_resources/icons/html5-200px.png"></div>' +
+              '<div slot="feature-right"><strong>CMS: </strong> HTML 5' +
+              '<br><strong>Maintainer: </strong> Web Community' +
+              '<br><strong>Contact: </strong> web_community@byu.edu</div>' +
+              '<div slot="feature-center">' + library.description + '</div>' +
+              '</byu-feature-card>';
           }
         });
         element.innerHTML = html;
@@ -2372,7 +2379,7 @@ function querySelectorSlot(slot, selector) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = applyTemplate;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hash_sum__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hash_sum__ = __webpack_require__(17);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hash_sum___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_hash_sum__);
 /*
  *  @license
@@ -2461,6 +2468,76 @@ function runAfterStamping(element, callback) {
 /* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
+exports = module.exports = __webpack_require__(16)();
+// imports
+
+
+// module
+exports.push([module.i, ":host byu-feature-card{width:45%;display:inline-block}:host .resource-icon{border:1px solid #767676;border-radius:50%;padding:10px;margin-right:10px}", ""]);
+
+// exports
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function() {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		var result = [];
+		for(var i = 0; i < this.length; i++) {
+			var item = this[i];
+			if(item[2]) {
+				result.push("@media " + item[2] + "{" + item[1] + "}");
+			} else {
+				result.push(item[1]);
+			}
+		}
+		return result.join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
 
@@ -2523,7 +2600,7 @@ module.exports = sum;
 
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2688,7 +2765,7 @@ class EventPart {
 //# sourceMappingURL=lit-extended.js.map
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2820,13 +2897,13 @@ function insertNodeIntoTemplate(template, node, refNode = null) {
 //# sourceMappingURL=modify-template.js.map
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = render;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lit_html_js__ = __webpack_require__(1);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modify_template_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__modify_template_js__ = __webpack_require__(19);
 /* unused harmony reexport html */
 /* unused harmony reexport svg */
 /* unused harmony reexport TemplateResult */
