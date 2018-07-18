@@ -10,6 +10,8 @@
  *
  */
 
-function byu_resources_preprocess(&$variables) {
-  $variables['#attached']['library'][] = 'byu_resources/default';
+function byu_resources_preprocess_html(&$variables) {
+  if ($variables['root_path'] == 'byu-resources') {
+    $variables['#attached']['library'][] = 'byu_resources/default';
+  }
 }

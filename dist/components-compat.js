@@ -96,7 +96,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     /******/__webpack_require__.p = "";
     /******/
     /******/ // Load entry module and return exports
-    /******/return __webpack_require__(__webpack_require__.s = 4);
+    /******/return __webpack_require__(__webpack_require__.s = 7);
     /******/
 })(
 /************************************************************************/
@@ -1070,14 +1070,49 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
     "use strict";
+    /* harmony export (immutable) */
+    __webpack_exports__["a"] = matchesSelector;
+    /*
+     *  @license
+     *    Copyright 2017 Brigham Young University
+     *
+     *    Licensed under the Apache License, Version 2.0 (the "License");
+     *    you may not use this file except in compliance with the License.
+     *    You may obtain a copy of the License at
+     *
+     *        http://www.apache.org/licenses/LICENSE-2.0
+     *
+     *    Unless required by applicable law or agreed to in writing, software
+     *    distributed under the License is distributed on an "AS IS" BASIS,
+     *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     *    See the License for the specific language governing permissions and
+     *    limitations under the License.
+     */
+
+    function matchesSelector(el, selector) {
+        var proto = Element.prototype;
+        var actual = proto.matches || proto.matchesSelector || proto.mozMatchesSelector || proto.msMatchesSelector || proto.oMatchesSelector || proto.webkitMatchesSelector || function (s) {
+            var doc = this.document || this.ownerDocument;
+            return doc.querySelectorAll(s).indexOf(this) !== -1;
+        };
+
+        return actual.call(el, selector);
+    }
+
+    /***/
+},
+/* 4 */
+/***/function (module, __webpack_exports__, __webpack_require__) {
+
+    "use strict";
     /* unused harmony export renderAttributes */
     /* unused harmony export classString */
     /* unused harmony export styleString */
     /* harmony import */
-    var __WEBPACK_IMPORTED_MODULE_0__polymer_polymer_lib_mixins_properties_mixin_js__ = __webpack_require__(6);
-    /* harmony import */var __WEBPACK_IMPORTED_MODULE_1__polymer_polymer_lib_utils_case_map_js__ = __webpack_require__(8);
-    /* harmony import */var __WEBPACK_IMPORTED_MODULE_2_lit_html_lib_shady_render_js__ = __webpack_require__(11);
-    /* harmony import */var __WEBPACK_IMPORTED_MODULE_3_lit_html_lib_lit_extended_js__ = __webpack_require__(9);
+    var __WEBPACK_IMPORTED_MODULE_0__polymer_polymer_lib_mixins_properties_mixin_js__ = __webpack_require__(9);
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_1__polymer_polymer_lib_utils_case_map_js__ = __webpack_require__(11);
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_2_lit_html_lib_shady_render_js__ = __webpack_require__(18);
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_3_lit_html_lib_lit_extended_js__ = __webpack_require__(16);
     /* unused harmony reexport html */
     /* unused harmony reexport svg */
 
@@ -1381,13 +1416,51 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     /***/
 },
-/* 4 */
+/* 5 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
     "use strict";
 
     Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-    /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__polymer_lit_element__ = __webpack_require__(3);
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__lib_templating__ = __webpack_require__(14);
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_1__lib_matchesSelector__ = __webpack_require__(3);
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_2__lib_querySelectorSlot__ = __webpack_require__(13);
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_3__lib_createEvent__ = __webpack_require__(12);
+    /* harmony reexport (binding) */__webpack_require__.d(__webpack_exports__, "applyTemplate", function () {
+        return __WEBPACK_IMPORTED_MODULE_0__lib_templating__["a"];
+    });
+    /* harmony reexport (binding) */__webpack_require__.d(__webpack_exports__, "matchesSelector", function () {
+        return __WEBPACK_IMPORTED_MODULE_1__lib_matchesSelector__["a"];
+    });
+    /* harmony reexport (binding) */__webpack_require__.d(__webpack_exports__, "querySelectorSlot", function () {
+        return __WEBPACK_IMPORTED_MODULE_2__lib_querySelectorSlot__["a"];
+    });
+    /* harmony reexport (binding) */__webpack_require__.d(__webpack_exports__, "createEvent", function () {
+        return __WEBPACK_IMPORTED_MODULE_3__lib_createEvent__["a"];
+    });
+    /**
+     * Created by ThatJoeMoore on 2/14/17
+     */
+
+    /***/
+},
+/* 6 */
+/***/function (module, exports) {
+
+    module.exports = "<div id=\"resources\"></div>";
+
+    /***/
+},
+/* 7 */
+/***/function (module, __webpack_exports__, __webpack_require__) {
+
+    "use strict";
+
+    Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__polymer_lit_element__ = __webpack_require__(4);
+
+    var util = __webpack_require__(5);
+    var template = __webpack_require__(6);
 
     var ByuResources = function (_WEBPACK_IMPORTED_MO) {
         _inherits(ByuResources, _WEBPACK_IMPORTED_MO);
@@ -1399,6 +1472,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         _createClass(ByuResources, [{
+            key: '_createRoot',
+            value: function _createRoot() {
+                return this.attachShadow({ mode: 'open' });
+            }
+        }, {
             key: '_render',
             value: function _render(_ref) {
                 _objectDestructuringEmpty(_ref);
@@ -1406,17 +1484,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }, {
             key: 'connectedCallback',
             value: function connectedCallback() {
+                var _this6 = this;
+
                 _get(ByuResources.prototype.__proto__ || Object.getPrototypeOf(ByuResources.prototype), 'connectedCallback', this).call(this);
-                (function ($) {
-                    $.getJSON('https://cdn.byu.edu/manifest.json', function (data) {
-                        $.each(data.libraries, function (name, library) {
+                util.applyTemplate(this, 'byu-resources', template, function () {
+                    var element = _this6.shadowRoot.querySelector('#resources');
+                    // this.shadowRoot.querySelector('#resources').innerHTML = this.info;
+                    jQuery.getJSON('https://cdn.byu.edu/manifest.json', function (data) {
+                        var html = '';
+                        jQuery.each(data.libraries, function (name, library) {
                             if (library.type == 'web-component') {
-                                console.log(library.name);
-                                console.log(library.description);
+                                html += '<byu-feature-card class="gray-title"><div slot="title">' + library.name + '</div><div slot="feature-center">' + library.description + '</div></byu-feature-card>';
                             }
                         });
+                        element.innerHTML = html;
                     });
-                })(jQuery);
+                    // (function($) {
+                    //   $.getJSON('https://cdn.byu.edu/manifest.json', function(data) {
+                    //     $.each(data.libraries, function(name, library) {
+                    //       if (library.type == 'web-component') {
+                    //         let libraryInfo = library.name + ' ' + library.description + ' | ';
+                    //         console.log(libraryInfo);
+                    //       }
+                    //     });
+                    //
+                    //   });
+                    // })(jQuery);
+                });
 
                 // $.getJSON('https://www.drupal.org/brigham-young-university', function(data) {console.log(data)});
             }
@@ -1430,7 +1524,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     /***/
 },
-/* 5 */
+/* 8 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
     "use strict";
@@ -1438,7 +1532,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var __WEBPACK_IMPORTED_MODULE_0__utils_boot_js__ = __webpack_require__(0);
     /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__utils_boot_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_boot_js__);
     /* harmony import */var __WEBPACK_IMPORTED_MODULE_1__utils_mixin_js__ = __webpack_require__(2);
-    /* harmony import */var __WEBPACK_IMPORTED_MODULE_2__utils_async_js__ = __webpack_require__(7);
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_2__utils_async_js__ = __webpack_require__(10);
     /**
     @license
     Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -1609,18 +1703,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             function PropertiesChanged() {
                 _classCallCheck(this, PropertiesChanged);
 
-                var _this6 = _possibleConstructorReturn(this, (PropertiesChanged.__proto__ || Object.getPrototypeOf(PropertiesChanged)).call(this));
+                var _this7 = _possibleConstructorReturn(this, (PropertiesChanged.__proto__ || Object.getPrototypeOf(PropertiesChanged)).call(this));
 
-                _this6.__dataEnabled = false;
-                _this6.__dataReady = false;
-                _this6.__dataInvalid = false;
-                _this6.__data = {};
-                _this6.__dataPending = null;
-                _this6.__dataOld = null;
-                _this6.__dataInstanceProps = null;
-                _this6.__serializing = false;
-                _this6._initializeProperties();
-                return _this6;
+                _this7.__dataEnabled = false;
+                _this7.__dataReady = false;
+                _this7.__dataInvalid = false;
+                _this7.__data = {};
+                _this7.__dataPending = null;
+                _this7.__dataOld = null;
+                _this7.__dataInstanceProps = null;
+                _this7.__serializing = false;
+                _this7._initializeProperties();
+                return _this7;
             }
 
             /**
@@ -1768,14 +1862,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             }, {
                 key: '_invalidateProperties',
                 value: function _invalidateProperties() {
-                    var _this7 = this;
+                    var _this8 = this;
 
                     if (!this.__dataInvalid && this.__dataReady) {
                         this.__dataInvalid = true;
                         microtask.run(function () {
-                            if (_this7.__dataInvalid) {
-                                _this7.__dataInvalid = false;
-                                _this7._flushProperties();
+                            if (_this8.__dataInvalid) {
+                                _this8.__dataInvalid = false;
+                                _this8._flushProperties();
                             }
                         });
                     }
@@ -2047,7 +2141,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     /***/
 },
-/* 6 */
+/* 9 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
     "use strict";
@@ -2055,7 +2149,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var __WEBPACK_IMPORTED_MODULE_0__utils_boot_js__ = __webpack_require__(0);
     /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__utils_boot_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__utils_boot_js__);
     /* harmony import */var __WEBPACK_IMPORTED_MODULE_1__utils_mixin_js__ = __webpack_require__(2);
-    /* harmony import */var __WEBPACK_IMPORTED_MODULE_2__properties_changed_js__ = __webpack_require__(5);
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_2__properties_changed_js__ = __webpack_require__(8);
     /**
     @license
     Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
@@ -2285,11 +2379,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                  * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
                  */
                 get: function get() {
-                    var _this9 = this;
+                    var _this10 = this;
 
                     var props = this._properties;
                     return props ? Object.keys(props).map(function (p) {
-                        return _this9.attributeNameForProperty(p);
+                        return _this10.attributeNameForProperty(p);
                     }) : [];
                 }
             }, {
@@ -2312,7 +2406,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     /***/
 },
-/* 7 */
+/* 10 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
     "use strict";
@@ -2533,7 +2627,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     /***/
 },
-/* 8 */
+/* 11 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
     "use strict";
@@ -2591,7 +2685,237 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     /***/
 },
-/* 9 */
+/* 12 */
+/***/function (module, __webpack_exports__, __webpack_require__) {
+
+    "use strict";
+    /* harmony export (immutable) */
+    __webpack_exports__["a"] = createEvent;
+    /*
+     *  @license
+     *    Copyright 2017 Brigham Young University
+     *
+     *    Licensed under the Apache License, Version 2.0 (the "License");
+     *    you may not use this file except in compliance with the License.
+     *    You may obtain a copy of the License at
+     *
+     *        http://www.apache.org/licenses/LICENSE-2.0
+     *
+     *    Unless required by applicable law or agreed to in writing, software
+     *    distributed under the License is distributed on an "AS IS" BASIS,
+     *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     *    See the License for the specific language governing permissions and
+     *    limitations under the License.
+     */
+
+    function createEvent(name, detail) {
+        if (typeof window.CustomEvent === 'function') {
+            return new CustomEvent(name, { detail: detail, cancelable: true, bubbles: true });
+        }
+        var evt = document.createEvent('CustomEvent');
+        evt.initCustomEvent(name, true, true, detail);
+        return evt;
+    }
+
+    /***/
+},
+/* 13 */
+/***/function (module, __webpack_exports__, __webpack_require__) {
+
+    "use strict";
+    /* harmony export (immutable) */
+    __webpack_exports__["a"] = querySelectorSlot;
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__matchesSelector_js__ = __webpack_require__(3);
+    /*
+     *  @license
+     *    Copyright 2017 Brigham Young University
+     *
+     *    Licensed under the Apache License, Version 2.0 (the "License");
+     *    you may not use this file except in compliance with the License.
+     *    You may obtain a copy of the License at
+     *
+     *        http://www.apache.org/licenses/LICENSE-2.0
+     *
+     *    Unless required by applicable law or agreed to in writing, software
+     *    distributed under the License is distributed on an "AS IS" BASIS,
+     *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     *    See the License for the specific language governing permissions and
+     *    limitations under the License.
+     */
+
+    function querySelectorSlot(slot, selector) {
+        var roots = slot.assignedNodes({ flatten: true }).filter(function (n) {
+            return n.nodeType === Node.ELEMENT_NODE;
+        });
+
+        for (var i = 0, len = roots.length; i < len; i++) {
+            var each = roots[i];
+            if (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__matchesSelector_js__["a" /* default */])(each, selector)) {
+                return each;
+            }
+            var child = each.querySelector(selector);
+            if (child) {
+                return child;
+            }
+        }
+        return null;
+    }
+
+    /***/
+},
+/* 14 */
+/***/function (module, __webpack_exports__, __webpack_require__) {
+
+    "use strict";
+    /* harmony export (immutable) */
+    __webpack_exports__["a"] = applyTemplate;
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_0_hash_sum__ = __webpack_require__(15);
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_0_hash_sum___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_hash_sum__);
+    /*
+     *  @license
+     *    Copyright 2017 Brigham Young University
+     *
+     *    Licensed under the Apache License, Version 2.0 (the "License");
+     *    you may not use this file except in compliance with the License.
+     *    You may obtain a copy of the License at
+     *
+     *        http://www.apache.org/licenses/LICENSE-2.0
+     *
+     *    Unless required by applicable law or agreed to in writing, software
+     *    distributed under the License is distributed on an "AS IS" BASIS,
+     *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     *    See the License for the specific language governing permissions and
+     *    limitations under the License.
+     */
+
+    var TEMPLATE_RENDERED_CLASS = 'byu-component-rendered';
+
+    function applyTemplate(element, elementName, template, callback) {
+        var sum = __WEBPACK_IMPORTED_MODULE_0_hash_sum___default()(template);
+
+        var elSettings = element.__byu_webCommunity_components = element.__byu_webCommunity_components || {};
+        if (elSettings.templateHash === sum) {
+            //Nothing has changed in the element.  Don't replace the DOM, don't fire the callback.
+            return;
+        }
+        elSettings.templateHash = sum;
+
+        if (window.ShadyCSS && !window.ShadyCSS.nativeShadow) {
+            applyTemplateShady(element, elementName, template, callback, sum);
+        } else {
+            applyTemplateNative(element, template, callback);
+        }
+    }
+
+    function applyTemplateShady(element, elementName, template, callback, sum) {
+        var templateId = '__byu-custom-element-template_' + elementName + '_' + sum;
+        var templateElement = document.head.querySelector('template#' + templateId);
+        if (!templateElement) {
+            templateElement = document.createElement('template');
+            templateElement.id = templateId;
+            templateElement.innerHTML = template;
+            document.head.appendChild(templateElement);
+            ShadyCSS.prepareTemplate(templateElement, elementName);
+        }
+        if (ShadyCSS.styleElement) {
+            ShadyCSS.styleElement(element);
+        } else if (ShadyCSS.applyStyle) {
+            ShadyCSS.applyStyle(element);
+        } else {
+            throw new Error('ShadyCSS is not properly defined: no styleElement or applyStyle!');
+        }
+        var imported = document.importNode(templateElement.content, true);
+        var shadow = element.shadowRoot;
+        //It'd be nice if we could just diff the DOM and replace what changed between templates, but that might lead to
+        // event listeners getting applied twice.  Easier to just clear out the shadow DOM and replace it.
+        while (shadow.firstChild) {
+            shadow.removeChild(shadow.firstChild);
+        }
+        shadow.appendChild(imported);
+        setTimeout(function () {
+            runAfterStamping(element, callback);
+        });
+    }
+
+    function applyTemplateNative(element, template, callback) {
+        element.shadowRoot.innerHTML = template;
+        runAfterStamping(element, callback);
+    }
+
+    function runAfterStamping(element, callback) {
+        element.classList.add(TEMPLATE_RENDERED_CLASS);
+        if (callback) {
+            callback();
+        }
+    }
+
+    /***/
+},
+/* 15 */
+/***/function (module, exports, __webpack_require__) {
+
+    "use strict";
+
+    function pad(hash, len) {
+        while (hash.length < len) {
+            hash = '0' + hash;
+        }
+        return hash;
+    }
+
+    function fold(hash, text) {
+        var i;
+        var chr;
+        var len;
+        if (text.length === 0) {
+            return hash;
+        }
+        for (i = 0, len = text.length; i < len; i++) {
+            chr = text.charCodeAt(i);
+            hash = (hash << 5) - hash + chr;
+            hash |= 0;
+        }
+        return hash < 0 ? hash * -2 : hash;
+    }
+
+    function foldObject(hash, o, seen) {
+        return Object.keys(o).sort().reduce(foldKey, hash);
+        function foldKey(hash, key) {
+            return foldValue(hash, o[key], key, seen);
+        }
+    }
+
+    function foldValue(input, value, key, seen) {
+        var hash = fold(fold(fold(input, key), toString(value)), typeof value === 'undefined' ? 'undefined' : _typeof(value));
+        if (value === null) {
+            return fold(hash, 'null');
+        }
+        if (value === undefined) {
+            return fold(hash, 'undefined');
+        }
+        if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') {
+            if (seen.indexOf(value) !== -1) {
+                return fold(hash, '[Circular]' + key);
+            }
+            seen.push(value);
+            return foldObject(hash, value, seen);
+        }
+        return fold(hash, value.toString());
+    }
+
+    function toString(o) {
+        return Object.prototype.toString.call(o);
+    }
+
+    function sum(o) {
+        return pad(foldValue(0, o, '', []).toString(16), 8);
+    }
+
+    module.exports = sum;
+
+    /***/
+},
+/* 16 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
     "use strict";
@@ -2801,7 +3125,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     /***/
 },
-/* 10 */
+/* 17 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
     "use strict";
@@ -2943,14 +3267,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
     /***/
 },
-/* 11 */
+/* 18 */
 /***/function (module, __webpack_exports__, __webpack_require__) {
 
     "use strict";
     /* harmony export (immutable) */
     __webpack_exports__["a"] = render;
     /* harmony import */var __WEBPACK_IMPORTED_MODULE_0__lit_html_js__ = __webpack_require__(1);
-    /* harmony import */var __WEBPACK_IMPORTED_MODULE_1__modify_template_js__ = __webpack_require__(10);
+    /* harmony import */var __WEBPACK_IMPORTED_MODULE_1__modify_template_js__ = __webpack_require__(17);
     /* unused harmony reexport html */
     /* unused harmony reexport svg */
     /* unused harmony reexport TemplateResult */

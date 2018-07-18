@@ -1,8 +1,8 @@
 {
-  "name": "GraphQL Component",
+  "name": "byu-resources",
   "version": "1.0.0",
   "prviate": true,
-  "main": "graphql-component.js",
+  "main": "byu-resources.js",
   "scripts": {
     "build": "gulp build",
     "start": "gulp watch",
@@ -13,7 +13,7 @@
     "byu-web-component-build": "^0.2.3",
     "@polymer/lit-element": "^0.5.2"
   },
-  "description": "Pulls info using GraphQL",
+  "description": "Pulls information about BYU maintained Drupal modules and web components.",
   "license": "",
   "repository": "."
 }
