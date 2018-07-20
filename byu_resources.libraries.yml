@@ -1,4 +1,7 @@
 default:
+  css:
+    theme:
+      css/byu_resources.css: {}
   js:
     js/byu_resources.js: {}
     https://cdn.byu.edu/byu-feature-card/latest/byu-feature-card.min.js: { type: external, minified: true }

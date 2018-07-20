@@ -1,4 +1,4 @@
-(function($){
+(function($) {
   $.getJSON('https://cdn.byu.edu/manifest.json', function(data) {
     let html = '';
     $.each(data.libraries, function(name, library) {
