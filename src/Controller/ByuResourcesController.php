@@ -18,7 +18,7 @@ class ByuResourcesController extends ControllerBase {
    */
 
   public function content() {
-    $html = '<byu-resources></byu-resources>';
+    $html = '<div id="resources">Resources loading...</div>';
 
     return [
       '#type' => 'markup',

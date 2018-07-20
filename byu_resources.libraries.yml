@@ -1,13 +1,6 @@
 default:
   js:
-    dist/components.min.js: { minified: true }
-    https://cdn.byu.edu/byu-feature-card/latest/byu-feature-card.min.js: { type: external, minified: true }
-  dependencies:
-    - core/jquery
-
-compat:
-  js:
-    dist/components-compat.min.js: { minified: true }
+    js/byu_resources.js: {}
     https://cdn.byu.edu/byu-feature-card/latest/byu-feature-card.min.js: { type: external, minified: true }
   dependencies:
     - core/jquery
