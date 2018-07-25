@@ -1,5 +1,5 @@
 byu_resources.content:
-  path: '/byu-resources'
+  path: '/test/byu-resources'
   defaults:
     _controller: '\Drupal\byu_resources\Controller\ByuResourcesController::content'
     _title: 'BYU Resources'

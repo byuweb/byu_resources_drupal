@@ -4,18 +4,22 @@
 * Pulls information about web components and Drupal modules developed by BYU.
 */
 
-/**
- * Implements hook_preproces()
- * @param $variables
- *
- */
+use Drupal\node\Entity\Node;
+use Drupal\Core\Render\Element;
 
-function byu_resources_preprocess_html(&$variables) {
-  if ($variables['root_path'] == 'byu-resources') {
-    $variables['#attached']['library'][] = 'byu_resources/default';
+function byu_resources_theme() {
+  $theme['node__view__byu_resources'] = [
+    'template' => 'node--view--byu-resources'
+  ];
+  return $theme;
+}
+
+function template_preprocess_node__view__byu_resources(&$variables) {
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
   }
 }
 
 function byu_resources_cron() {
-
+  // Put the code for updating the nodes with the resources in here.
 }
