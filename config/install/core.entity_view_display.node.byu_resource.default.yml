@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.byu_resource.field_byu_resource_demo_link
     - field.field.node.byu_resource.field_byu_resource_description
     - field.field.node.byu_resource.field_byu_resource_download_link
+    - field.field.node.byu_resource.field_byu_resource_machine_name
     - field.field.node.byu_resource.field_byu_resource_maintainer
     - field.field.node.byu_resource.field_byu_resource_readme
     - field.field.node.byu_resource.field_byu_resource_resource_type
@@ -112,6 +113,7 @@ hidden:
   field_byu_resource_classes: true
   field_byu_resource_cms_icon: true
   field_byu_resource_description: true
+  field_byu_resource_machine_name: true
   field_byu_resource_resource_type: true
   links: true
   uid: true

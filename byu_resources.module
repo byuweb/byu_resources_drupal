@@ -6,6 +6,13 @@
 
 use Drupal\node\Entity\Node;
 use Drupal\Core\Render\Element;
+use Drupal\file\Entity\File;
+
+function byu_resources_preprocess_html(&$variables) {
+  if ($variables['root_path'] == 'byu-resources') {
+    $variables['#attached']['library'] = 'byu_resources/default';
+  }
+}
 
 /**
  * Implements hook_theme()
@@ -34,8 +41,16 @@ function template_preprocess_node__view__byu_resources(&$variables) {
  */
 
 function byu_resources_cron() {
-  // Put the code for updating the nodes with the resources in here.
-//  get_web_components();
+  /** Functions below for debugging purposes. */
+  get_web_components();
+
+  $tomorrow = new DateTime("tomorrow");
+  $tomorrow = $tomorrow->getTimestamp();
+  $requestTime = \Drupal::time()->getRequestTime();
+  $interval = \Drupal::config('automated_cron.settings')->get('interval');
+  if ($tomorrow - $requestTime < $interval || $interval > 86400) {
+    get_web_components();
+  }
 }
 
 /**
@@ -152,49 +167,84 @@ function markdown_decode($input) {
 }
 
 /**
- * This function fetches the web components and then adds a BYU Resource node for each one.
+ * This function fetches the machine names of all the existing resources. This is used to
+ * make sure no duplicate byu resource nodes are made.
+ * @return array - An array containing all the machine names of the existing BYU resources.
+ */
+
+function get_existing_resources() {
+  $nids = \Drupal::entityQuery('node')->condition('type','byu_resource')->execute();
+  $nodes = Node::loadMultiple($nids);
+  foreach ($nodes as $node) {
+    $names[] = $node->get('field_byu_resource_machine_name')->getValue()[0];
+  }
+  return $names;
+}
+
+/**
+ * This function fetches the web components and then adds a BYU Resource node for
+ * each one if it doesn't already exist.
  */
 
 function get_web_components() {
+  // Get the initial JSON
   $json = file_get_contents('https://cdn.byu.edu/manifest.json');
   $json = json_decode($json);
+
+  // Load the existing BYU resources for later use.
+  $names = get_existing_resources();
+
+  // Get the HTML 5 logo
+  $imageData = file_get_contents('/workbench/web/modules/custom/byu_resources/icons/html5-200px.png');
+  $image = file_save_data($imageData, 'public://html5-200px.png', FILE_EXISTS_REPLACE);
+
   foreach($json->libraries as $library => $item) {
     if ($item->type == 'web-component') {
 
       // Set all the variables for the fields.
       $sourceURL = $item->links->source;
       $parts = explode('/', $sourceURL);
-      $nodeName = $parts[count($parts) - 1];
-      $nodeName = make_title($nodeName);
+      $machineName = $parts[count($parts) - 1];
+      $nodeName = make_title($machineName);
       $readme = file_get_contents($item->links->readme);
       $readme = markdown_decode($readme);
       $description = $item->description;
+
+      // Check to see if resource already exists.
+      $resourceExists = false;
+      foreach($names as $name) {
+        if ($machineName == $name['value']) {
+          $resourceExists = true;
+        }
+      }
 
       // Check for deprecation
       if ($item->deprecated) $nodeName .= ' DEPRECATED';
 
       // Create the BYU Resource
-      $node = Node::create([
-        'type' => 'byu_resource',
-        'title' => $nodeName,
-        'field_byu_resource_cms_icon' => [
-          'fid' => 'upload',
-          'filepath' => './icons/html5-200px.png',
-        ],
-        'field_byu_resource_classes' => 'gray-title',
-        'field_byu_resource_maintainer' => 'Web Community',
-        'field_byu_resource_contact' => 'web_community@byu.edu',
-        'field_byu_resource_cms' => 'HTML 5',
-        'field_byu_resource_resource_type' => 'Web Component',
-        'field_byu_resource_description' => $description,
-        'field_byu_resource_readme' => $readme,
-        'field_byu_source_code_link' => $sourceURL
-      ]);
-      try {
-        $node->save();
-      }
-      catch(Exception $e) {
-        drupal_set_message('Caught exception: ' . $e->getMessage() . '\n', 'error');
+      if (!$resourceExists) {
+        $node = Node::create([
+          'type' => 'byu_resource',
+          'title' => $nodeName,
+          'field_byu_resource_cms_icon' => [
+            'target_id' => $image->id(),
+            'alt' => 'HTML 5 Logo'
+          ],
+          'field_byu_resource_classes' => 'gray-title',
+          'field_byu_resource_maintainer' => 'Web Community',
+          'field_byu_resource_contact' => 'web_community@byu.edu',
+          'field_byu_resource_cms' => 'HTML 5',
+          'field_byu_resource_resource_type' => 'Web Component',
+          'field_byu_resource_machine_name' => $machineName,
+          'field_byu_resource_description' => $description,
+          'field_byu_resource_readme' => $readme,
+          'field_byu_source_code_link' => $sourceURL
+        ]);
+        try {
+          $node->save();
+        } catch (Exception $e) {
+          drupal_set_message('Caught exception: ' . $e->getMessage() . '\n', 'error');
+        }
       }
     }
   }

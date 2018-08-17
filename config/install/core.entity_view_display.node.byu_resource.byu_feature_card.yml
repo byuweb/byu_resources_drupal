@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.byu_feature_card
+    - core.entity_view_display.node.byu_feature_card
     - field.field.node.byu_resource.field_byu_resource_classes
     - field.field.node.byu_resource.field_byu_resource_cms
     - field.field.node.byu_resource.field_byu_resource_cms_icon
@@ -10,6 +10,7 @@ dependencies:
     - field.field.node.byu_resource.field_byu_resource_demo_link
     - field.field.node.byu_resource.field_byu_resource_description
     - field.field.node.byu_resource.field_byu_resource_download_link
+    - field.field.node.byu_resource.field_byu_resource_machine_name
     - field.field.node.byu_resource.field_byu_resource_maintainer
     - field.field.node.byu_resource.field_byu_resource_readme
     - field.field.node.byu_resource.field_byu_resource_resource_type
@@ -93,6 +94,7 @@ hidden:
   field_byu_resource_demo_link: true
   field_byu_resource_download_link: true
   field_byu_resource_readme: true
+  field_byu_resource_machine_name: true
   field_byu_resource_resource_type: true
   field_byu_source_code_link: true
   links: true

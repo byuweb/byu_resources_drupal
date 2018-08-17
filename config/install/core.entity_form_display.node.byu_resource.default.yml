@@ -9,6 +9,7 @@ dependencies:
     - field.field.node.byu_resource.field_byu_resource_demo_link
     - field.field.node.byu_resource.field_byu_resource_description
     - field.field.node.byu_resource.field_byu_resource_download_link
+    - field.field.node.byu_resource.field_byu_resource_machine_name
     - field.field.node.byu_resource.field_byu_resource_maintainer
     - field.field.node.byu_resource.field_byu_resource_readme
     - field.field.node.byu_resource.field_byu_resource_resource_type
@@ -31,12 +32,28 @@ targetEntityType: node
 bundle: byu_resource
 mode: default
 content:
+  field_byu_resource_classes:
+    type: string_textfield
+    weight: 11
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   field_byu_resource_cms:
     weight: 4
     settings: {  }
     third_party_settings: {  }
     type: options_select
     region: content
+  field_byu_resource_cms_icon:
+      type: image_image
+      weight: 4
+      region: content
+      settings:
+        progress_indicator: throbber
+        preview_image_style: thumbnail
+      third_party_settings: {  }
   field_byu_resource_contact:
     weight: 6
     settings:
@@ -109,8 +126,7 @@ content:
     third_party_settings: {  }
 hidden:
   created: true
-  field_byu_resource_classes: true
-  field_byu_resource_cms_icon: true
+  field_byu_resource_machine_name: true
   path: true
   promote: true
   status: true
