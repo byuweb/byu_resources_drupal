@@ -2,7 +2,7 @@ langcode: en
 status: false
 dependencies:
   config:
-    - core.entity_view_mode.node.teaser
+    - core.entity_view_display.node.byu_resource.teaser
     - field.field.node.byu_resource.field_byu_resource_classes
     - field.field.node.byu_resource.field_byu_resource_cms
     - field.field.node.byu_resource.field_byu_resource_cms_icon

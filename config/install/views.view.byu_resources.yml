@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_mode.node.byu_feature_card
+    - core.entity_view_display.node.byu_resource.byu_feature_card
     - node.type.byu_resource
   module:
     - node
