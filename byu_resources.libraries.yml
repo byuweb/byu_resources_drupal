@@ -2,5 +2,3 @@ default:
   css:
     theme:
       css/default.css: {}
-  js:
-    js/readme-alter.js: {}
