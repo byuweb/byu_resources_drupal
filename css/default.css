@@ -6,3 +6,32 @@ div[slot="feature-left"] {
 div[slot="feature-right"] {
   display: inline-block;
 }
+
+.download-button,
+.demo-button,
+.field--name-field-byu-source-code-link a {
+  display: inline-block;
+  padding: 10px 15px;
+  width: 200px;
+  min-width: 150px;
+  margin: 20px 15px 20px 0;
+  text-align: center;
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: white;
+  text-decoration: none;
+}
+
+.field--name-field-byu-source-code-link a {
+  background-color: #002e5d;
+}
+
+.demo-button {
+
+}
+
+.source-button {
+  background-color: #767676;
+}
