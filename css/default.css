@@ -9,29 +9,36 @@ div[slot="feature-right"] {
 
 .download-button,
 .demo-button,
-.source-button a {
+.source-button {
+  font-size: 15px;
+  line-height: 20px;
+  color: white;
+  font-weight: 500;
+  text-transform: uppercase;
+  text-decoration: none;
   display: inline-block;
   padding: 10px 15px;
   width: 200px;
   min-width: 150px;
   margin: 20px 15px 20px 0;
   text-align: center;
-  font-size: 15px;
-  line-height: 20px;
-  font-weight: 500;
-  text-transform: uppercase;
-  color: white;
+}
+
+.download-button:hover,
+.demo-button:hover,
+.source-button:hover {
+  color: #CCCCCC;
   text-decoration: none;
 }
 
-.download-button a {
-  background-color: #002e5d;
+.download-button {
+  background-color: #002E5D;
 }
 
 .demo-button {
-
+  background-color: #66B200;
 }
 
-.source-button a {
-  background-color: #767676;
+.source-button {
+  background-color: #666666;
 }

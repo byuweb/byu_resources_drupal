@@ -26,6 +26,12 @@ function byu_resources_theme() {
   $theme['field__field_byu_source_code_link'] = [
     'template' => 'field--field-byu-source-code-link'
   ];
+  $theme['field__field_byu_resource_download_link'] = [
+    'template' => 'field--field-byu-resource-download-link'
+  ];
+  $theme['field__field_byu_resource_demo_link'] = [
+    'template' => 'field--field-byu-resource-demo-link'
+  ];
   return $theme;
 }
 
@@ -46,6 +52,24 @@ function template_preprocess_node__view__byu_resources(&$variables) {
 function template_preprocess_field__field_byu_source_code_link(&$variables) {
   $variables['url'] = $variables['element'][0]['#url']->getUri();
   $variables['title'] = 'Source Code';
+}
+
+/**
+ * @param $variables - Variables that are used in the template
+ */
+
+function template_preprocess_field__field_byu_resource_download_link(&$variables) {
+  $variables['url'] = $variables['element'][0]['#url']->getUri();
+  $variables['title'] = 'Download';
+}
+
+/**
+ * @param $variables - Variables that are used in the template
+ */
+
+function template_preprocess_field__field_byu_resource_demo_link(&$variables) {
+  $variables['url'] = $variables['element'][0]['#url']->getUri();
+  $variables['title'] = 'Demo';
 }
 
 /**
@@ -79,7 +103,7 @@ function make_title($input) {
 }
 
 /**
- * This function takes markdown text and converts it to html.
+ * This function takes markdown text and converts it to html. Currently not being used since the conversion does not work as well.
  * @param $input - Input string to be decoded.
  * @return string - Fully formatted html.
  */
@@ -216,6 +240,7 @@ function get_web_components() {
 
       // Set all the variables for the fields.
       $sourceURL = $item->links->source;
+      $downloadURL = $sourceURL . '/archive/master.zip';
       $parts = explode('/', $sourceURL);
       $machineName = $parts[count($parts) - 1];
       $nodeName = make_title($machineName);
@@ -254,7 +279,8 @@ function get_web_components() {
           'field_byu_resource_machine_name' => $machineName,
           'field_byu_resource_description' => $description,
           'field_byu_resource_readme' => $readme,
-          'field_byu_source_code_link' => $sourceURL
+          'field_byu_source_code_link' => $sourceURL,
+          'field_byu_resource_download_link' => $downloadURL
         ]);
         $node->field_byu_resource_readme->format = 'full_html';
         try {
