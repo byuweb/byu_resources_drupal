@@ -9,7 +9,7 @@ div[slot="feature-right"] {
 
 .download-button,
 .demo-button,
-.field--name-field-byu-source-code-link a {
+.source-button a {
   display: inline-block;
   padding: 10px 15px;
   width: 200px;
@@ -24,7 +24,7 @@ div[slot="feature-right"] {
   text-decoration: none;
 }
 
-.field--name-field-byu-source-code-link a {
+.download-button a {
   background-color: #002e5d;
 }
 
@@ -32,6 +32,6 @@ div[slot="feature-right"] {
 
 }
 
-.source-button {
+.source-button a {
   background-color: #767676;
 }

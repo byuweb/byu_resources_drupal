@@ -7,10 +7,11 @@
 use Drupal\node\Entity\Node;
 use Drupal\Core\Render\Element;
 
-function byu_resources_preprocess_html(&$variables) {
-//  if ($variables['root_path'] == 'byu-resources') {
+function byu_resources_preprocess_node(&$variables) {
+  $type = $variables['node']->bundle();
+  if ($type == 'byu_resource') {
     $variables['#attached']['library'] = 'byu_resources/default';
-//  }
+  }
 }
 
 /**
@@ -29,7 +30,7 @@ function byu_resources_theme() {
 }
 
 /**
- * @param $variables - Adds variables to be used in the template.
+ * @param $variables - Variables to be used in the template.
  */
 
 function template_preprocess_node__view__byu_resources(&$variables) {
@@ -38,14 +39,13 @@ function template_preprocess_node__view__byu_resources(&$variables) {
   }
 }
 
-function template_preprocess_field__field_byu_source_code_link(&$vars) {
-  /*
-   * $vars['element']
-   * $vars['element'][0]['#url']->getUri() to get URL
-   */
-//  $url = $vars['element'][0]['#url'];
-  $vars['url'] = $vars['element'][0]['#url']->getUri();
-  $vars['title'] = 'Source Code';
+/**
+ * @param $variables - Variables that are used in the template
+ */
+
+function template_preprocess_field__field_byu_source_code_link(&$variables) {
+  $variables['url'] = $variables['element'][0]['#url']->getUri();
+  $variables['title'] = 'Source Code';
 }
 
 /**
