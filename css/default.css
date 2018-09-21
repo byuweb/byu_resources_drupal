@@ -1,8 +1,3 @@
-div[slot="feature-left"] {
-  border: solid gray 1px;
-  border-radius: 50%;
-}
-
 div[slot="feature-right"] {
   display: inline-block;
 }
