@@ -2,13 +2,14 @@ langcode: en
 status: true
 dependencies:
   config:
-    - core.entity_view_display.node.byu_resource.byu_feature_card
+    - core.entity_view_mode.node.byu_feature_card
     - field.field.node.byu_resource.field_byu_resource_classes
     - field.field.node.byu_resource.field_byu_resource_cms
     - field.field.node.byu_resource.field_byu_resource_cms_icon
     - field.field.node.byu_resource.field_byu_resource_contact
     - field.field.node.byu_resource.field_byu_resource_demo_link
     - field.field.node.byu_resource.field_byu_resource_description
+    - field.field.node.byu_resource.field_byu_resource_doc_link
     - field.field.node.byu_resource.field_byu_resource_download_link
     - field.field.node.byu_resource.field_byu_resource_machine_name
     - field.field.node.byu_resource.field_byu_resource_maintainer
@@ -16,15 +17,16 @@ dependencies:
     - field.field.node.byu_resource.field_byu_resource_resource_type
     - field.field.node.byu_resource.field_byu_source_code_link
     - node.type.byu_resource
+  enforced:
+    module:
+      - byu_resources
   module:
     - byu_layout_card
     - field_layout
     - image
     - manage_display
     - options
-  enforced:
-    module:
-      - byu_resources
+    - text
 third_party_settings:
   field_layout:
     id: byu_feature_card
@@ -36,7 +38,7 @@ mode: byu_feature_card
 content:
   field_byu_resource_classes:
     type: string
-    weight: 6
+    weight: 7
     region: classes
     label: hidden
     settings:
@@ -66,11 +68,19 @@ content:
     type: basic_string
     region: feature_right
   field_byu_resource_description:
-    type: basic_string
+    type: text_default
     weight: 5
     region: feature_center
     label: hidden
     settings: {  }
+    third_party_settings: {  }
+  field_byu_resource_doc_link:
+    type: string
+    weight: 6
+    region: feature_center
+    label: hidden
+    settings:
+      link_to_entity: true
     third_party_settings: {  }
   field_byu_resource_maintainer:
     weight: 3
@@ -93,8 +103,8 @@ hidden:
   created: true
   field_byu_resource_demo_link: true
   field_byu_resource_download_link: true
-  field_byu_resource_readme: true
   field_byu_resource_machine_name: true
+  field_byu_resource_readme: true
   field_byu_resource_resource_type: true
   field_byu_source_code_link: true
   links: true

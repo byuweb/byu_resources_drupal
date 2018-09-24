@@ -1,12 +1,12 @@
 langcode: en
 status: true
 dependencies:
-  module:
-    - node
-    - options
   enforced:
     module:
       - byu_resources
+  module:
+    - node
+    - options
 id: node.field_byu_resource_cms
 field_name: field_byu_resource_cms
 entity_type: node

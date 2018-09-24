@@ -1,12 +1,12 @@
 langcode: en
 status: true
 dependencies:
-  module:
-    - link
-    - node
   enforced:
     module:
       - byu_resources
+  module:
+    - link
+    - node
 id: node.field_byu_resource_download_link
 field_name: field_byu_resource_download_link
 entity_type: node

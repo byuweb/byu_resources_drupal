@@ -1,11 +1,11 @@
 langcode: en
 status: true
 dependencies:
-  module:
-    - node
   enforced:
     module:
       - byu_resources
+  module:
+    - node
 id: node.field_byu_resource_contact
 field_name: field_byu_resource_contact
 entity_type: node

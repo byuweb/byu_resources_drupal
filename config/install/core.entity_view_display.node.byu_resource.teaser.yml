@@ -2,13 +2,12 @@ langcode: en
 status: false
 dependencies:
   config:
-    - core.entity_view_display.node.byu_resource.teaser
+    - core.entity_view_mode.node.teaser
     - field.field.node.byu_resource.field_byu_resource_classes
     - field.field.node.byu_resource.field_byu_resource_cms
     - field.field.node.byu_resource.field_byu_resource_cms_icon
     - field.field.node.byu_resource.field_byu_resource_contact
     - field.field.node.byu_resource.field_byu_resource_demo_link
-    - field.field.node.byu_resource.field_byu_resource_description
     - field.field.node.byu_resource.field_byu_resource_download_link
     - field.field.node.byu_resource.field_byu_resource_machine_name
     - field.field.node.byu_resource.field_byu_resource_maintainer
@@ -16,15 +15,15 @@ dependencies:
     - field.field.node.byu_resource.field_byu_resource_resource_type
     - field.field.node.byu_resource.field_byu_source_code_link
     - node.type.byu_resource
+  enforced:
+    module:
+      - byu_resources
   module:
     - byu_layout_card
     - field_layout
     - image
     - manage_display
     - options
-  enforced:
-    module:
-      - byu_resources
 third_party_settings:
   field_layout:
     id: byu_feature_card
@@ -34,6 +33,16 @@ targetEntityType: node
 bundle: byu_resource
 mode: teaser
 content:
+  created:
+    label: hidden
+    type: timestamp
+    weight: -48
+    region: title
+    settings:
+      date_format: medium
+      custom_date_format: ''
+      timezone: ''
+    third_party_settings: {  }
   field_byu_resource_classes:
     type: string
     weight: 6
@@ -65,13 +74,6 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
-  field_byu_resource_description:
-    type: basic_string
-    weight: 5
-    region: feature_center
-    label: hidden
-    settings: {  }
-    third_party_settings: {  }
   field_byu_resource_maintainer:
     type: string
     weight: 3
@@ -83,19 +85,24 @@ content:
   title:
     label: hidden
     type: title
-    weight: 0
+    weight: -50
     region: title
     settings:
       tag: h2
       linked: true
     third_party_settings: {  }
+  uid:
+    label: hidden
+    type: submitted
+    weight: -49
+    region: title
+    settings: {  }
+    third_party_settings: {  }
 hidden:
-  created: true
   field_byu_resource_demo_link: true
   field_byu_resource_download_link: true
+  field_byu_resource_machine_name: true
   field_byu_resource_readme: true
   field_byu_resource_resource_type: true
-  field_byu_resource_machine_name: true
   field_byu_source_code_link: true
   links: true
-  uid: true

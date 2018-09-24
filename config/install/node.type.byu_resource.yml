@@ -1,11 +1,11 @@
 langcode: en
 status: true
 dependencies:
-  module:
-    - menu_ui
   enforced:
     module:
       - byu_resources
+  module:
+    - menu_ui
 third_party_settings:
   menu_ui:
     available_menus:
@@ -17,4 +17,4 @@ description: 'Adds information about a specific resource BYU has for web develop
 help: ''
 new_revision: true
 preview_mode: 1
-display_submitted: true
+display_submitted: false

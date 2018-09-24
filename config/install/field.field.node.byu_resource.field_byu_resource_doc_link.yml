@@ -2,19 +2,17 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_byu_resource_description
+    - field.storage.node.field_byu_resource_doc_link
     - node.type.byu_resource
-  module:
-    - text
-id: node.byu_resource.field_byu_resource_description
-field_name: field_byu_resource_description
+id: node.byu_resource.field_byu_resource_doc_link
+field_name: field_byu_resource_doc_link
 entity_type: node
 bundle: byu_resource
-label: Description
+label: 'Doc Link'
 description: ''
 required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: text_long
+field_type: string

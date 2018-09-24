@@ -1,13 +1,13 @@
 langcode: en
 status: true
 dependencies:
+  enforced:
+    module:
+      - byu_resources
   module:
     - file
     - image
     - node
-  enforced:
-    module:
-      - byu_resources
 id: node.field_byu_resource_cms_icon
 field_name: field_byu_resource_cms_icon
 entity_type: node

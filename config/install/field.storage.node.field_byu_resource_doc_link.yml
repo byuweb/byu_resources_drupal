@@ -1,18 +1,20 @@
 langcode: en
 status: true
 dependencies:
+  module:
+    - node
   enforced:
     module:
       - byu_resources
-  module:
-    - link
-    - node
-id: node.field_byu_resource_demo_link
-field_name: field_byu_resource_demo_link
+id: node.field_byu_resource_doc_link
+field_name: field_byu_resource_doc_link
 entity_type: node
-type: link
-settings: {  }
-module: link
+type: string
+settings:
+  max_length: 255
+  is_ascii: false
+  case_sensitive: false
+module: core
 locked: false
 cardinality: 1
 translatable: true

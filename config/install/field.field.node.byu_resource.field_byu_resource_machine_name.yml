@@ -8,7 +8,7 @@ id: node.byu_resource.field_byu_resource_machine_name
 field_name: field_byu_resource_machine_name
 entity_type: node
 bundle: byu_resource
-label: Machine Name
+label: 'Machine Name'
 description: ''
 required: false
 translatable: false
