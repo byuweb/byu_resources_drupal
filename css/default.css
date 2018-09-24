@@ -22,12 +22,11 @@ div[slot="feature-right"] {
 .download-button:hover,
 .demo-button:hover,
 .source-button:hover {
-  color: #CCCCCC;
-  text-decoration: none;
+  color: white;
 }
 
 .download-button {
-  background-color: #002E5D;
+  background-color: #0057B8;
 }
 
 .demo-button {

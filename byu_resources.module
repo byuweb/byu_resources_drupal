@@ -21,7 +21,7 @@ function byu_resources_preprocess_html(&$variables) {
   // The library is found at https://github.com/erusev/parsedown
 
   if(!file_exists(drupal_get_path('module', 'byu_resources') . '/vendor/erusev/parsedown/Parsedown.php')) {
-    drupal_set_message('The module BYU Resources requires the Parsedown library to work properly. Please run composer install in the module directory.', 'warning');
+    drupal_set_message('The module BYU Resources requires the Parsedown library to work properly. Please run composer install in the directory of this module.', 'warning');
   }
 }
 
@@ -110,6 +110,7 @@ function byu_resources_cron() {
   $interval = \Drupal::config('automated_cron.settings')->get('interval');
   if ($tomorrow - $requestTime < $interval || $interval > 86400) {
     get_web_components();
+    get_drupal_modules();
   }
 }
 
@@ -218,7 +219,6 @@ function get_web_components() {
           'field_byu_source_code_link' => $sourceURL,
           'field_byu_resource_download_link' => $downloadURL
         ]);
-//        $node->field_byu_resource_readme->format = 'markdown';
         try {
           $node->save();
         } catch (Exception $e) {
@@ -238,27 +238,40 @@ function get_web_components() {
  */
 
 function parse_drupal_org($input) {
-  $lastPosition = strpos($input, '<h4 id="projects-supported">');
+  // Initialize array that will hold the module information.
   $modules = [
     'machine_name' => [],
     'link' => [],
     'title' => []
   ];
+
+  // Cut the part of the html out of the page that has the module information.
+  $lastPosition = strpos($input, '<h4 id="projects-supported">');
   $endPosition = strpos($input, '</p>', $lastPosition) + strlen('</p>');
   $input = substr($input, $lastPosition, $endPosition - $lastPosition);
+
+  // Reset lastPosition and put nextPosition where the machine name of the first module is.
   $lastPosition = 0;
   $nextPosition = strpos($input, '/project/') + strlen('/project/');
 
+  // Loop through grabbing machine names and titles of the modules. Until one loop through
+  // the portion of the html is completed.
   while ($nextPosition >= $lastPosition) {
+    // Get machine name. It's found between the /project/ part of the href, and the end quotes.
     $lastPosition = strpos($input, '"', $nextPosition);
-    $modules['machine_name'][] = substr($input, $nextPosition, $lastPosition - $nextPosition) . ' | ';
+    $machineName = substr($input, $nextPosition, $lastPosition - $nextPosition);
+    $modules['machine_name'][] = $machineName;
 
-//    $modules['link'][] = 'https://www.drupal.org/project/' . $modules['machine_name'][$i];
+    // Set the link to the module, which is just https://www.drupal.org/project/machine_name
+    $modules['link'][] = 'https://www.drupal.org/project/' . $machineName;
 
+    // Get title. It's found between the last carat of the <a> tag, and the end tag </a>.
     $nextPosition = strpos($input, '>', $lastPosition) + 1;
     $lastPosition = strpos($input, '</a>', $nextPosition);
-    $modules['title'][] = substr($input, $nextPosition, $lastPosition - $nextPosition) . ' | ';
+    $modules['title'][] = substr($input, $nextPosition, $lastPosition - $nextPosition);
 
+    // Set nextPosition for next machine name. It's placed here so the condition statement in
+    // the while loop makes sense.
     $nextPosition = strpos($input, '/project/', $lastPosition) + strlen('/project/');
   }
 
@@ -266,15 +279,77 @@ function parse_drupal_org($input) {
 }
 
 /**
- * This function fetches the drupal modules from drupal.org. You still have to manually add the machine names of the
- * modules to the array below.
+ * This function fetches the drupal modules from drupal.org. It uses the parse_drupal_org function to fetch
+ * the machine names and titles of the existing drupal modules byu has developed.
  */
 
 function get_drupal_modules() {
   $client = \Drupal::service('http_client');
   $result = $client->get('https://www.drupal.org/brigham-young-university');
   $output = $result->getBody()->getContents();
+  $modules = parse_drupal_org($output);
 
-  $byu = parse_drupal_org($output);
-//  $byu = parse_drupal_org($output);
+  // Load the module path
+  $modulePath = drupal_get_path('module', 'byu_resources');
+
+  // Load the existing resources.
+  $names = get_existing_resources();
+
+  // Get the drupal logo.
+  $imagePath = $modulePath . '/icons/drupal-logo.png';
+  $imageData = file_get_contents($imagePath);
+  $image = file_save_data($imageData, 'public://drupal-logo.png', FILE_EXISTS_REPLACE);
+
+  foreach ($modules['machine_name'] as $index => $machineName) {
+    // Set various variables for the fields.
+    $sourceURL = 'https://cgit.drupalcode.org/' . $machineName;
+    $downloadURL = $modules['link'][$index];
+
+    // Grab the readme from drupal's git repository and parse the markdown.
+    $readmeCode = file_get_contents($sourceURL . '/tree/README.md');
+    $readmeStart = strpos($readmeCode, '<div class="highlight"><pre>') + strlen('<div class="highlight"><pre>');
+    $readmeEnd = strpos($readmeCode, '</pre>', $readmeStart);
+    $readme = substr($readmeCode, $readmeStart, $readmeEnd - $readmeStart);
+    include_once($modulePath . "/vendor/erusev/parsedown/Parsedown.php"); // Library for parsing markdown text.
+    $Parsedown = new Parsedown();
+    $readme = $Parsedown->text($readme);
+
+    // Check to see if resource already exists.
+    $resourceExists = false;
+    foreach ($names as $name) {
+      if ($machineName == $name) {
+        $resourceExists = true;
+      }
+    }
+
+    // Create the new BYU resource if the resource doesn't already exist.
+    if (!$resourceExists) {
+      $node = Node::create([
+        'type' => 'byu_resource',
+        'title' => $modules['title'][$index],
+        'field_byu_resource_cms_icon' => [
+          'target_id' => $image->id(),
+          'alt' => 'Drupal Logo',
+          'title' => 'Drupal'
+        ],
+        'field_byu_resource_classes' => 'drupal-blue-title',
+        'field_byu_resource_maintainer' => 'Web Community',
+        'field_byu_resource_contact' => 'web_community@byu.edu',
+        'field_byu_resource_cms' => 'Drupal 8',
+        'field_byu_resource_resource_type' => 'Module',
+        'field_byu_resource_machine_name' => $machineName,
+        'field_byu_resource_readme' => [
+          'value' => $readme,
+          'format' => 'markdown'
+        ],
+        'field_byu_source_code_link' => $sourceURL,
+        'field_byu_resource_download_link' => $downloadURL
+      ]);
+      try {
+        $node->save();
+      } catch(Exception $e) {
+        drupal_set_message('Caught exception: ' . $e->getMessage(), 'error');
+      }
+    }
+  }
 }
