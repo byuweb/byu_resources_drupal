@@ -145,7 +145,7 @@ function get_existing_resources() {
 }
 
 /**
- * This function fetches the web components and then adds a BYU Resource node for
+ * This function fetches the web components / HTML 5 resources and then adds a BYU Resource node for
  * each one if it doesn't already exist.
  */
 
@@ -161,9 +161,9 @@ function get_web_components() {
   $modulePath = drupal_get_path('module', 'byu_resources');
 
   // Get the HTML 5 logo
-  $imagePath = $modulePath . '/icons/html-200px.png';
+  $imagePath = $modulePath . '/icons/html5.png';
   $imageData = file_get_contents($imagePath);
-  $image = file_save_data($imageData, 'public://html-200px.png', FILE_EXISTS_REPLACE);
+  $image = file_save_data($imageData, 'public://html5.png', FILE_EXISTS_REPLACE);
 
   foreach($json->libraries as $library => $item) {
     if ($item->type == 'web-component') {
@@ -238,6 +238,7 @@ function get_web_components() {
  */
 
 function parse_drupal_org($input) {
+
   // Initialize array that will hold the module information.
   $modules = [
     'machine_name' => [],
@@ -301,9 +302,18 @@ function get_drupal_modules() {
   $image = file_save_data($imageData, 'public://drupal-logo.png', FILE_EXISTS_REPLACE);
 
   foreach ($modules['machine_name'] as $index => $machineName) {
+
     // Set various variables for the fields.
     $sourceURL = 'https://cgit.drupalcode.org/' . $machineName;
     $downloadURL = $modules['link'][$index];
+
+    // Grab module description from the module's project page.
+    $result = $client->get($downloadURL);
+    $output = $result->getBody()->getContents();
+    $descriptionStart = strpos($output, 'field-name-body');
+    $descriptionStart = strpos($output, '<p>', $descriptionStart) + strlen('<p>');
+    $descriptionEnd = strpos($output, '</p>', $descriptionStart);
+    $description = substr($output, $descriptionStart, $descriptionEnd - $descriptionStart);
 
     // Grab the readme from drupal's git repository and parse the markdown.
     $readmeCode = file_get_contents($sourceURL . '/tree/README.md');
@@ -317,7 +327,7 @@ function get_drupal_modules() {
     // Check to see if resource already exists.
     $resourceExists = false;
     foreach ($names as $name) {
-      if ($machineName == $name) {
+      if ($machineName == $name['value']) {
         $resourceExists = true;
       }
     }
@@ -337,6 +347,10 @@ function get_drupal_modules() {
         'field_byu_resource_contact' => 'web_community@byu.edu',
         'field_byu_resource_cms' => 'Drupal 8',
         'field_byu_resource_resource_type' => 'Module',
+        'field_byu_resource_description' => [
+          'value' => $description,
+          'format' => 'basic_html'
+        ],
         'field_byu_resource_machine_name' => $machineName,
         'field_byu_resource_readme' => [
           'value' => $readme,
