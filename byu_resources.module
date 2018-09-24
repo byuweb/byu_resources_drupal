@@ -212,6 +212,7 @@ function get_web_components() {
           'field_byu_resource_resource_type' => 'Web Component',
           'field_byu_resource_machine_name' => $machineName,
           'field_byu_resource_description' => $description,
+          'field_byu_resource_doc_link' => 'Documentation',
           'field_byu_resource_readme' => [
             'value' => $readme,
             'format' => 'markdown'
@@ -351,6 +352,7 @@ function get_drupal_modules() {
           'value' => $description,
           'format' => 'basic_html'
         ],
+        'field_byu_resource_doc_link' => 'Documentation',
         'field_byu_resource_machine_name' => $machineName,
         'field_byu_resource_readme' => [
           'value' => $readme,

@@ -2,6 +2,19 @@ div[slot="feature-right"] {
   display: inline-block;
 }
 
+div[slot="feature-center"] a[href*='/web/node/'] {
+  text-align: center;
+  background-color: #66B200;
+  width: 50%;
+  margin: 16px auto;
+  padding: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+  text-decoration: none;
+  display: block;
+}
+
 .download-button,
 .demo-button,
 .source-button {
