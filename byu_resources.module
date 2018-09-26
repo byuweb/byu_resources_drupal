@@ -96,14 +96,19 @@ function template_preprocess_field__field_byu_resource_demo_link(&$variables) {
 }
 
 /**
+ * Implements hook_install()
+ */
+
+function byu_resources_install() {
+  get_web_components();
+  get_drupal_modules();
+}
+
+/**
  * Implements hook_cron()
  */
 
 function byu_resources_cron() {
-  /** Functions below for debugging purposes. */
-  get_web_components();
-  get_drupal_modules();
-
   $tomorrow = new DateTime("tomorrow");
   $tomorrow = $tomorrow->getTimestamp();
   $requestTime = \Drupal::time()->getRequestTime();
@@ -231,7 +236,7 @@ function get_web_components() {
 }
 
 /**
- * Parses the html pulled from drupal.org to get the machine names nad regular names of all the
+ * Parses the html pulled from drupal.org to get the machine names and regular names of all the
  * BYU drupal modules.
  *
  * @param $input string - Raw html from drupal.org
@@ -347,7 +352,7 @@ function get_drupal_modules() {
         'field_byu_resource_maintainer' => 'Web Community',
         'field_byu_resource_contact' => 'web_community@byu.edu',
         'field_byu_resource_cms' => 'Drupal 8',
-        'field_byu_resource_resource_type' => 'Module',
+        'field_byu_resource_resource_type' => 'Drupal Module',
         'field_byu_resource_description' => [
           'value' => $description,
           'format' => 'basic_html'

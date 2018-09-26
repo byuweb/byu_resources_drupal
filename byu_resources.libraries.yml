@@ -3,4 +3,4 @@ default:
     theme:
       css/default.css: {}
   js:
-    js/get-drupal-modules.js: {}
+    js/default.js: {}

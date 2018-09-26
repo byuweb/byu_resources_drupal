@@ -1,5 +1,5 @@
 div[slot="feature-right"] {
-  display: inline-block;
+  display: block;
 }
 
 div[slot="feature-center"] a[href*='/web/node/'] {
