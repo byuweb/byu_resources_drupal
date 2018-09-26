@@ -5,7 +5,6 @@ dependencies:
     - field.field.node.byu_resource.field_byu_resource_classes
     - field.field.node.byu_resource.field_byu_resource_cms
     - field.field.node.byu_resource.field_byu_resource_cms_icon
-    - field.field.node.byu_resource.field_byu_resource_contact
     - field.field.node.byu_resource.field_byu_resource_demo_link
     - field.field.node.byu_resource.field_byu_resource_description
     - field.field.node.byu_resource.field_byu_resource_doc_link
@@ -57,14 +56,6 @@ content:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
-  field_byu_resource_contact:
-    weight: 6
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: email_default
-    region: content
   field_byu_resource_demo_link:
     weight: 9
     settings:

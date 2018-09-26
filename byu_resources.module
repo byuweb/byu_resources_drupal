@@ -211,8 +211,7 @@ function get_web_components() {
             'title' => 'HTML 5'
           ],
           'field_byu_resource_classes' => 'gray-title',
-          'field_byu_resource_maintainer' => 'Web Community',
-          'field_byu_resource_contact' => 'web_community@byu.edu',
+          'field_byu_resource_maintainer' => 'Engineering Group',
           'field_byu_resource_cms' => 'HTML 5',
           'field_byu_resource_resource_type' => 'Web Component',
           'field_byu_resource_machine_name' => $machineName,
@@ -349,8 +348,7 @@ function get_drupal_modules() {
           'title' => 'Drupal'
         ],
         'field_byu_resource_classes' => 'drupal-blue-title',
-        'field_byu_resource_maintainer' => 'Web Community',
-        'field_byu_resource_contact' => 'web_community@byu.edu',
+        'field_byu_resource_maintainer' => 'Drupal Users Group',
         'field_byu_resource_cms' => 'Drupal 8',
         'field_byu_resource_resource_type' => 'Drupal Module',
         'field_byu_resource_description' => [
