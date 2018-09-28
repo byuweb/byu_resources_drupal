@@ -113,7 +113,8 @@ function byu_resources_cron() {
   $tomorrow = $tomorrow->getTimestamp();
   $requestTime = \Drupal::time()->getRequestTime();
   $interval = \Drupal::config('automated_cron.settings')->get('interval');
-  if ($tomorrow - $requestTime < $interval || $interval > 86400) {
+  if (($tomorrow - $requestTime < $interval) || ($interval > 86400)) {
+    // Make functions to update components. Possibly make a menu that allows you to control what you want to update.
     get_web_components();
     get_drupal_modules();
   }
@@ -146,6 +147,8 @@ function get_existing_resources() {
   foreach ($nodes as $node) {
     $names[] = $node->get('field_byu_resource_machine_name')->getValue()[0];
   }
+  $names[] = ['value' => 'byu_theme'];
+  $names[] = ['value' => 'byu-theme-components'];
   return $names;
 }
 
