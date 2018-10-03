@@ -109,6 +109,7 @@ function byu_resources_install() {
  */
 
 function byu_resources_cron() {
+  update_resources();
   $tomorrow = new DateTime("tomorrow");
   $tomorrow = $tomorrow->getTimestamp();
   $requestTime = \Drupal::time()->getRequestTime();
@@ -374,4 +375,45 @@ function get_drupal_modules() {
       }
     }
   }
+}
+
+function update_resources() {
+  $config = \Drupal::config('byu_resources.settings');
+
+  $option['readme'] = $config->get('fields_to_update')['readme'];
+  $option['description'] = $config->get('fields_to_update')['description'];
+
+  $query = \Drupal::entityQuery('node');
+  $query->condition('type', 'byu_resource');
+  $nids = $query->execute();
+  $nodes = Node::loadMultiple($nids);
+
+  $modulePath = drupal_get_path('module', 'byu_resources');
+
+  if ($option['readme'] == 'readme') {
+    foreach ($nodes as $node) {
+      switch ($node->field_byu_resource_resource_type->value) {
+        case 'Drupal Module':
+          $readmeCode = file_get_contents($node->field_byu_source_code_link->value . '/tree/README.md');
+          $readmeStart = strpos($readmeCode, '<div class="highlight"><pre>') + strlen('<div class="highlight"><pre>');
+          $readmeEnd = strpos($readmeCode, '</pre>', $readmeStart);
+          $readme = substr($readmeCode, $readmeStart, $readmeEnd - $readmeStart);
+          include_once ($modulePath . "/vendor/erusev/parsedown/Parsedown.php"); // Library for parsing markdown text.
+          $Parsedown = new Parsedown();
+          $readme = $Parsedown->text($readme);
+          $node->field_byu_resource_readme->value = $readme;
+          break;
+
+        case 'Web Component':
+          include_once($modulePath . "/vendor/erusev/parsedown/Parsedown.php"); // Library for parsing markdown text.
+          $Parsedown = new Parsedown();
+          $readmeLink = 'https://raw.githubusercontent.com/byuweb/' . $node->field_byu_resource_machine_name->value . '/master/README.md';
+          $readme = file_get_contents($readmeLink);
+          $readme = $Parsedown->text($readme);
+          $node->field_byu_resource_machine_name->value = $readme;
+          break;
+      }
+    }
+  }
+
 }

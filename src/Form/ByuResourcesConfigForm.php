@@ -39,12 +39,17 @@ class ByuResourcesConfigForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $formState = null) {
     $config = $this->config('byu_resources.settings');
 
-    $defaults['my_textfield'] = $config->get('my_textfield');
+    $defaults['fields_to_update'] = $config->get('fields_to_update');
 
-    $form['my_textfield'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('This is a test.'),
-      '#default_value' => isset($defaults['my_textfield']) ? $defaults['my_textfield'] : ''
+    $form['fields_to_update'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Fields to be updated'),
+      '#description' => $this->t('Select the fields you want updated on a daily basis.'),
+      '#options' => [
+        'readme' => $this->t('Readme <small>(Documentation used on the documentation page.)</small>'),
+        'description' => $this->t('Description <small>(Short description used in the list of resources.)</small>'),
+      ],
+      '#default_value' => isset($defaults['fields_to_update']) ? $defaults['fields_to_update'] : ''
     ];
 
     return parent::buildForm($form, $formState);
@@ -59,7 +64,7 @@ class ByuResourcesConfigForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $formState) {
 
     $this->configFactory->getEditable('byu_resources.settings')
-      ->set('my_textfield', $formState->getValue('my_textfield'))
+      ->set('fields_to_update', $formState->getValue('fields_to_update'))
       ->save();
 
     parent::submitForm($form, $formState);
