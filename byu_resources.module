@@ -6,6 +6,7 @@
 
 use Drupal\node\Entity\Node;
 use Drupal\Core\Render\Element;
+include drupal_get_path('module', 'byu_resources') . '/vendor/erusev/parsedown/Parsedown.php';
 
 /**
  * Implements hook_preprocess_html()
@@ -109,7 +110,6 @@ function byu_resources_install() {
  */
 
 function byu_resources_cron() {
-  update_resources();
   $tomorrow = new DateTime("tomorrow");
   $tomorrow = $tomorrow->getTimestamp();
   $requestTime = \Drupal::time()->getRequestTime();
@@ -118,6 +118,7 @@ function byu_resources_cron() {
     // Make functions to update components. Possibly make a menu that allows you to control what you want to update.
     get_web_components();
     get_drupal_modules();
+    update_resources();
   }
 }
 
@@ -187,7 +188,6 @@ function get_web_components() {
 
 
       // Load and parse the readme.
-      include_once($modulePath . "/vendor/erusev/parsedown/Parsedown.php"); // Library for parsing markdown text.
       $Parsedown = new Parsedown();
       $readmeLink = $item->links->readme;
       $readme = file_get_contents($readmeLink);
@@ -329,7 +329,6 @@ function get_drupal_modules() {
     $readmeStart = strpos($readmeCode, '<div class="highlight"><pre>') + strlen('<div class="highlight"><pre>');
     $readmeEnd = strpos($readmeCode, '</pre>', $readmeStart);
     $readme = substr($readmeCode, $readmeStart, $readmeEnd - $readmeStart);
-    include_once($modulePath . "/vendor/erusev/parsedown/Parsedown.php"); // Library for parsing markdown text.
     $Parsedown = new Parsedown();
     $readme = $Parsedown->text($readme);
 
@@ -377,43 +376,118 @@ function get_drupal_modules() {
   }
 }
 
+/**
+ * Updates the existing resources. Currently only updates the documentation and short description.
+ */
+
 function update_resources() {
   $config = \Drupal::config('byu_resources.settings');
+  $updateRequested = false;
+  $nodes = null;
 
-  $option['readme'] = $config->get('fields_to_update')['readme'];
-  $option['description'] = $config->get('fields_to_update')['description'];
+  $options['readme'] = $config->get('fields_to_update')['readme'];
+  $options['description'] = $config->get('fields_to_update')['description'];
 
-  $query = \Drupal::entityQuery('node');
-  $query->condition('type', 'byu_resource');
-  $nids = $query->execute();
-  $nodes = Node::loadMultiple($nids);
+  foreach($options as $option) {
+    if ($option != 0) {
+      $updateRequested = true;
+      $query = \Drupal::entityQuery('node');
+      $query->condition('type', 'byu_resource');
+      $nids = $query->execute();
+      $nodes = Node::loadMultiple($nids);
+    }
+    else {
+      return false;
+    }
+  }
 
   $modulePath = drupal_get_path('module', 'byu_resources');
 
-  if ($option['readme'] == 'readme') {
+  if ($updateRequested) {
     foreach ($nodes as $node) {
       switch ($node->field_byu_resource_resource_type->value) {
         case 'Drupal Module':
-          $readmeCode = file_get_contents($node->field_byu_source_code_link->value . '/tree/README.md');
-          $readmeStart = strpos($readmeCode, '<div class="highlight"><pre>') + strlen('<div class="highlight"><pre>');
-          $readmeEnd = strpos($readmeCode, '</pre>', $readmeStart);
-          $readme = substr($readmeCode, $readmeStart, $readmeEnd - $readmeStart);
-          include_once ($modulePath . "/vendor/erusev/parsedown/Parsedown.php"); // Library for parsing markdown text.
-          $Parsedown = new Parsedown();
-          $readme = $Parsedown->text($readme);
-          $node->field_byu_resource_readme->value = $readme;
+          $updateNeeded = false;
+
+          // Update the readme. Uses same code as used by get_drupal_modules() to get and parse the readme from drupal.org
+          if ($options['readme'] == 'readme') {
+            $readmeCode = file_get_contents('https://cgit.drupalcode.org/' . $node->field_byu_resource_machine_name->value . '/tree/README.md');
+            $readmeStart = strpos($readmeCode, '<div class="highlight"><pre>') + strlen('<div class="highlight"><pre>');
+            $readmeEnd = strpos($readmeCode, '</pre>', $readmeStart);
+            $readme = substr($readmeCode, $readmeStart, $readmeEnd - $readmeStart);
+            $Parsedown = new Parsedown();
+            $readme = $Parsedown->text($readme);
+            if ($node->field_byu_resource_readme->value != $readme) {
+              $node->field_byu_resource_readme->value = $readme;
+              $node->field_byu_resource_readme->format = 'markdown';
+              $updateNeeded = true;
+            }
+          }
+
+          // Update the short description for the module. Uses same code as used by get_drupal_modules().
+          if ($options['description'] == 'description') {
+            $client = \Drupal::service('http_client');
+            $result = $client->get('https://www.drupal.org/project/' . $node->field_byu_resource_machine_name->value);
+            $output = $result->getBody()->getContents();
+            $descriptionStart = strpos($output, 'field-name-body');
+            $descriptionStart = strpos($output, '<p>', $descriptionStart) + strlen('<p>');
+            $descriptionEnd = strpos($output, '</p>', $descriptionStart);
+            $description = substr($output, $descriptionStart, $descriptionEnd - $descriptionStart);
+            if ($node->field_byu_resource_description->value != $description) {
+              $node->field_byu_resource_description->value = $description;
+              $node->field_byu_resource_description->format = 'basic_html';
+              $updateNeeded = true;
+            }
+          }
+
+          if ($updateNeeded) {
+            try {
+              $node->save();
+            } catch (Exception $e) {
+              drupal_set_message('Caught exception: ' . $e->getMessage(), 'error');
+            }
+          }
           break;
 
         case 'Web Component':
-          include_once($modulePath . "/vendor/erusev/parsedown/Parsedown.php"); // Library for parsing markdown text.
-          $Parsedown = new Parsedown();
-          $readmeLink = 'https://raw.githubusercontent.com/byuweb/' . $node->field_byu_resource_machine_name->value . '/master/README.md';
-          $readme = file_get_contents($readmeLink);
-          $readme = $Parsedown->text($readme);
-          $node->field_byu_resource_machine_name->value = $readme;
+          $updateNeeded = false;
+
+          // Update the readme. Uses the same code as used by get_web_components() to get and parse the readme from cdn.byu.edu.
+          if ($options['readme'] == 'readme') {
+            $Parsedown = new Parsedown();
+            $readmeLink = 'https://raw.githubusercontent.com/byuweb/' . $node->field_byu_resource_machine_name->value . '/master/README.md';
+            $readme = file_get_contents($readmeLink);
+            $readme = $Parsedown->text($readme);
+            if ($node->field_byu_resource_readme->value != $readme) {
+              $node->field_byu_resource_readme->value = $readme;
+              $node->field_byu_resource_readme->format = 'markdown';
+              $updateNeeded = true;
+            }
+          }
+
+          // Update the short description. Uses the same code as used by get_web_components().
+          if ($options['description'] == 'description') {
+            $json = file_get_contents('https://cdn.byu.edu/manifest.json');
+            $json = json_decode($json);
+            $machineName = $node->field_byu_resource_machine_name->value;
+            $description = $json->libraries->$machineName->description;
+
+            if ($node->field_byu_resource_description->value != $description) {
+              $node->field_byu_resource_description->value = $description;
+              $node->field_byu_resource_description->format = 'basic_html';
+              $updateNeeded = true;
+            }
+          }
+
+          if ($updateNeeded) {
+            try {
+              $node->save();
+            } catch (Exception $e) {
+              drupal_set_message('Caught exception: ' . $e->getMessage(), 'error');
+            }
+          }
           break;
       }
     }
   }
-
 }
